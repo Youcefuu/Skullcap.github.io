@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cap Skull Buy</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin: 0;
+            padding: 20px;
+        }
+        h1 {
+            color: red;
+            font-size: 36px;
+        }
+        .button {
+            padding: 10px 20px;
+            font-size: 18px;
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            cursor: pointer;
+            border-radius: 5px;
+            margin-top: 20px;
+        }
+        .button:hover {
+            background-color: #0056b3;
+        }
+        .quantity-controls {
+            margin-top: 20px;
+        }
+        .quantity {
+            width: 50px;
+            text-align: center;
+            font-size: 18px;
+        }
+        form {
+            margin-top: 20px;
+        }
+        input {
+            padding: 10px;
+            width: 80%;
+            margin: 5px 0;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        .info {
+            margin-top: 30px;
+            font-size: 16px;
+        }
+        .total-price {
+            font-size: 20px;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>CAP SKULL BUY</h1>
+    <p>Vendiamo skull cap Syna World in taglia unica.</p>
+    <p><strong>Prezzo unitario:</strong> 5,99 euro (inclusa spedizione)</p>
+
+    <div class="quantity-controls">
+        <button class="button" onclick="changeQuantity(-1)">-</button>
+        <input type="number" id="quantity" class="quantity" value="1" min="1" max="100" readonly>
+        <button class="button" onclick="changeQuantity(1)">+</button>
+    </div>
+
+    <div class="total-price" id="totalPrice">Totale: 5,99 euro</div>
+
+    <h2>Dati per la Spedizione</h2>
+    <form id="orderForm">
+        <input type="text" name="nome" placeholder="Nome e Cognome" required>
+        <input type="text" name="indirizzo" placeholder="Indirizzo di Spedizione" required>
+        <input type="tel" name="telefono" placeholder="Numero di Telefono" required>
+        <input type="email" name="email" placeholder="Email (Gmail)" required>
+        <button type="button" class="button" onclick="processPayment()">Procedi al Pagamento</button>
+    </form>
+
+    <div class="info">
+        <p>Dopo aver effettuato l'ordine, riceverai un'email di conferma con il codice di tracciamento del pacco dopo 24 ore dal pagamento.</p>
+    </div>
+
+    <script>
+        const pricePerItem = 5.99;
+
+        function changeQuantity(amount) {
+            var quantityInput = document.getElementById("quantity");
+            var currentValue = parseInt(quantityInput.value);
+            if (currentValue + amount >= 1 && currentValue + amount <= 100) {
+                quantityInput.value = currentValue + amount;
+                updateTotalPrice();
+            }
+        }
+
+        function updateTotalPrice() {
+            var quantity = parseInt(document.getElementById("quantity").value);
+            var total = (pricePerItem * quantity).toFixed(2);
+            document.getElementById("totalPrice").innerText = `Totale: ${total} euro`;
+        }
+
+        function processPayment() {
+            const form = document.getElementById('orderForm');
+            const quantity = document.getElementById('quantity').value;
+            const total = (pricePerItem * quantity).toFixed(2);
+            const formData = new FormData(form);
+            const params = new URLSearchParams(formData).toString();
+            const paypalUrl = `https://www.paypal.com/cgi-bin/webscr?cmd=_xclick&business=serhaneyoucef726@gmail.com&item_name=Skull Cap&amount=${total}&currency_code=EUR&return=http://yourwebsite.com/thank-you`; // Modifica l'URL di ritorno
+            window.location.href = paypalUrl + '&' + params; // Reindirizza a PayPal
+        }
+    </script>
+
+</body>
+</html>
